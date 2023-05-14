@@ -36,19 +36,8 @@ sample_dir_path = os.path.normpath(args.sample_dir_path)
 ionization_mode = args.ionization_mode
 print(sample_dir_path)
 
-
-
-g = Graph()
-nm = g.namespace_manager
-
 with open(os.path.normpath('data/adducts_formatter.json')) as json_file:
     adducts_dic = json.load(json_file)
-
-# Create jlw namespace
-kg_uri = "https://enpkg.commons-lab.org/kg/"
-ns_kg = rdflib.Namespace(kg_uri)
-prefix = "enpkg"
-nm.bind(prefix, ns_kg)
 
 path = os.path.normpath(sample_dir_path)
 samples_dir = [directory for directory in os.listdir(path) if not directory.startswith('.DS_Store')]
@@ -57,6 +46,15 @@ df_list = []
 print(samples_dir)
 
 for directory in tqdm(samples_dir):
+
+    g = Graph()
+    nm = g.namespace_manager
+    # Create jlw namespace
+    kg_uri = "https://enpkg.commons-lab.org/kg/"
+    ns_kg = rdflib.Namespace(kg_uri)
+    prefix = "enpkg"
+    nm.bind(prefix, ns_kg)
+
     dir_path = os.path.join(path, directory)
     
     if not os.path.isdir(dir_path):
@@ -109,7 +107,7 @@ for directory in tqdm(samples_dir):
         csi_annotations = pd.read_csv(csi_path, sep='\t')
         print(csi_annotations.columns)
         metadata = pd.read_csv(metadata_path, sep='\t')
-        print(metadata.columns)
+        #print(metadata.columns)
         csi_annotations.replace({"adduct": adducts_dic},inplace=True)
     except FileNotFoundError:
         print(f"FileNotFoundError: {csi_path} or {metadata_path} not found.")
