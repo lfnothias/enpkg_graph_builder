@@ -21,40 +21,48 @@ conda activate graph_builder
 ### 1.1 Format samples' metadata
 
 ```console
-python src/01_rdf_sample_metadata.py -p path/to/your/data/directory/
+python src/individual_processing/01_rdf_sample_metadata.py -p path/to/your/data/directory/
 ```
 
 ### 1.2 Format feature's
 :warning: Part of this script needs to be adataped to you data
+
 ```console
-python src/02_rdf_features.py -p path/to/your/data/directory/ -ion {pos} or {neg}
+python src/individual_processing/02_rdf_features.py -p path/to/your/data/directory/ -ion {pos} or {neg}
 ```
 
 ### 1.3 Format Sirius/CSI:FingerID annotations
 
 ```console
-python src/03_rdf_csi_annotations.py -p path/to/your/data/directory/ -ion {pos} or {neg} or {auto}
+python src/individual_processing/03_rdf_csi_annotations.py -p path/to/your/data/directory/ -ion {pos} or {neg} or {auto}
 ```
-
 
 ### 1.4 Format Canopus annotations
 
 ```console
-python src/04_rdf_canopus.py -p path/to/your/data/directory/ -ion {pos} or {neg}
+python src/individual_processing/04_rdf_canopus.py -p path/to/your/data/directory/ -ion {pos} or {neg}
 ```
 
 
-### 1.5 Format ISDB annotations
+### 1.5a Format ISDB annotations
 
 ```console
-python src/05_rdf_isdb_annotations.py -p path/to/your/data/directory/ -ion {pos} or {neg}
+python src/individual_processing/05_rdf_isdb_annotations.py -p path/to/your/data/directory/ -ion {pos} or {neg}
 ```
+
+### 1.5b Format timaR annotations
+
+```console
+python src/individual_processing/05_rdf_tima-r_annotations.py -p path/to/your/data/directory/ -ion {pos} or {neg}
+```
+Requirements, the timaR results must be present in a folder `tima-r` and must have a `metadata.tsv` in the root folder.
 
 ### 1.6 Format samples' FBMN
 
 ```console
-python src/06_rdf_individual_mn.py -p path/to/your/data/directory/ -ion {pos} or {neg}
+python src/individual_processing/06_rdf_individual_mn.py -p path/to/your/data/directory/ -ion {pos} or {neg}
 ```
+
 
 ## 2. Steps that are dataset specific/optional
 
