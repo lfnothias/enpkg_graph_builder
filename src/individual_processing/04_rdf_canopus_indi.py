@@ -38,18 +38,6 @@ ionization_mode = args.ionization_mode
 print(sample_dir_path)
 
 
-g = Graph()
-nm = g.namespace_manager
-
-with open(os.path.normpath('data/adducts_formatter.json')) as json_file:
-    adducts_dic = json.load(json_file)
-
-# Create jlw namespace
-kg_uri = "https://enpkg.commons-lab.org/kg/"
-ns_kg = rdflib.Namespace(kg_uri)
-prefix = "enpkg"
-nm.bind(prefix, ns_kg)
-
 path = os.path.normpath(sample_dir_path)
 samples_dir = [directory for directory in os.listdir(path) if not directory.startswith('.DS_Store')]
 df_list = []
@@ -57,6 +45,19 @@ df_list = []
 print(samples_dir)
 
 for directory in tqdm(samples_dir):
+
+    g = Graph()
+    nm = g.namespace_manager
+
+    with open(os.path.normpath('data/adducts_formatter.json')) as json_file:
+        adducts_dic = json.load(json_file)
+
+    # Create jlw namespace
+    kg_uri = "https://enpkg.commons-lab.org/kg/"
+    ns_kg = rdflib.Namespace(kg_uri)
+    prefix = "enpkg"
+    nm.bind(prefix, ns_kg)
+
     dir_path = os.path.join(path, directory)
     
     if not os.path.isdir(dir_path):
@@ -114,7 +115,7 @@ for directory in tqdm(samples_dir):
                 pass
         except FileNotFoundError:
             sirius_version = 5
-            print(f"FileNotFoundError: The sirius_param_path file '{sirius_param_path}' was not found. Assuming SIRIUS v.5")
+            print(f"FileNotFoundError: The sirius_param_path file '{sirius_param_path}' was not found. Assuming the processing was external and with SIRIUS v.5")
     except NotADirectoryError:
         print(f"NotADirectoryError: Unable to read sirius_param_path at '{sirius_param_path}', it is not a valid directory.")
         continue
