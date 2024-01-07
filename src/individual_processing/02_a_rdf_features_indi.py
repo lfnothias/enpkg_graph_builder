@@ -39,11 +39,13 @@ ns_kg = rdflib.Namespace(kg_uri)
 prefix = "enpkg"
 
 path = os.path.normpath(sample_dir_path)
-samples_dir = [directory for directory in os.listdir(path)]
+samples_dir = [directory for directory in os.listdir(path) if not directory.startswith('.DS_Store')]
 for directory in tqdm(samples_dir):
+        
+    quant_path = os.path.join(path, directory, ionization_mode, directory + '-feature_table.csv')
+    #quant_path = os.path.join(path, directory, ionization_mode, directory + '_features_quant_' + ionization_mode + '.csv')  # this is to accomodate to the SINERGIA preprocessing
+    metadata_path = os.path.join(path, directory, 'metadata.tsv')
 
-    quant_path = os.path.join(path, directory, ionization_mode, directory + '_features_quant_' + ionization_mode + '.csv')
-    metadata_path = os.path.join(path, directory, directory + '_metadata.tsv')
     try:
         quant_table = pd.read_csv(quant_path, sep=',')
         metadata = pd.read_csv(metadata_path, sep='\t')
