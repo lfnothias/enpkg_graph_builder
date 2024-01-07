@@ -21,8 +21,7 @@ def main():
     parser.add_argument('-p', '--sample_dir_path', required=True, help='Folder path argument')
     parser.add_argument('-ion', '--ionization_mode', required=True, help='Ionization mode argument')
     parser.add_argument('--ion_sirius', default='auto', help='Ionization mode for Sirius annotations argument')
-    parser.add_argument('-c', '--cpus', type=int, default=None,
-                    help='Number of CPUs to use for processing. Default is 50% of available CPUs.')
+    parser.add_argument('-c', '--cpus', type=int, default=None, help='Number of CPUs to use for processing. Default is 50% of available CPUs.')
 
     args = parser.parse_args()
 
@@ -52,7 +51,7 @@ def main():
         "03_rdf_csi_annotations_indi_v2.py": params_wrapper_folder + ' ' + params_wrapper_ion_sirius,
         "04_rdf_canopus_indi_v2.py": params_wrapper_folder + ' ' + params_wrapper_ion_sirius,
         "05_rdf_tima-r_annotations_indi.py": params_wrapper_folder + ' ' + params_wrapper_ion,
-        "06_rdf_individual_mn_and_spec_lib_indi_v2c.py": params_wrapper_folder + ' ' + params_wrapper_ion
+        "06_rdf_individual_mn_and_spec_lib_indi.py": params_wrapper_folder + ' ' + params_wrapper_ion
     }
 
     # Run scripts in parallel
