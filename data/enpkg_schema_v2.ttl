@@ -1,0 +1,604 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#>         .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#>             .
+@prefix owl:     <http://www.w3.org/2002/07/owl#>                .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#>          .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/>                    .
+@prefix wd:      <http://www.wikidata.org/entity/>               .
+@prefix vann:    <http://purl.org/vocab/vann/>                   .
+@prefix dcterms: <http://purl.org/dc/terms/>                     .
+@prefix sdo: 	 <http://schema.org/>                            .
+@prefix orcid:	 <http://orcid.org/>                             .
+@prefix void:	 <http://rdfs.org/ns/void#>                      .
+@prefix enpkg:   <https://enpkg.commons-lab.org/kg/>             .
+
+# -------------------------------------------------- #
+# Semantic Versioning 2.0.0
+# https://semver.org
+# https://dgarijo.github.io/Widoco/doc/bestPractices/index-en.html
+# -------------------------------------------------- #
+
+<> a owl:Ontology ; 
+	owl:versionIRI enpkg:ontology_version\/0.1.0 ; 
+	owl:versionInfo "0.1.0" ;
+	dcterms:description "The RDF vocabulary describing concepts defined in the ENPKG dataset" ;
+	dcterms:title "The ENPKG RDF vocabulary" ;
+	dcterms:license <https://creativecommons.org/licenses/by-nc-sa/4.0/> ;
+	dcterms:creator orcid:0000-0002-3648-7362 ;
+	dcterms:contributor 
+		orcid:0000-0003-3389-2191 ,
+		orcid:0000-0001-9292-9463 ,
+		orcid:0000-0002-9619-1707 ;
+#	dcterms:created xsd:dateTime 
+	vann:preferredNamespacePrefix "enpkg"                                    ;
+	vann:preferredNamespaceUri    "https://enpkg.commons-lab.org/kg/"        ;
+	foaf:logo <https://avatars.githubusercontent.com/u/115986716?s=200&v=4a> .
+
+enpkg:LabObject a rdfs:Class ;
+	rdfs:label "A LabObject"   ;
+	rdfs:comment "An object that correspond to a physical laboratory object" .
+enpkg:LabExtract a rdfs:Class ;
+	rdfs:subClassOf enpkg:LabObject           ;
+	rdfs:label "A LabExtract"   ;
+	rdfs:comment "A natural extract obtained from the processing of a RawMaterial" .
+enpkg:RawMaterial a rdfs:Class ;
+	rdfs:subClassOf enpkg:LabObject           ;
+	rdfs:label "A RawMaterial"   ;
+	rdfs:comment "A raw laboratory biological material, i.e. before extraction" .
+enpkg:LabBlank a rdfs:Class ;
+	rdfs:subClassOf enpkg:LabObject           ;
+	rdfs:label "A LabBlank"   ;
+	rdfs:comment "A blank sample" .
+enpkg:LabQc a rdfs:Class ;
+	rdfs:subClassOf enpkg:LabObject           ;
+	rdfs:label "A LabQc"   ;
+	rdfs:comment "A quality control (QC) sample" .
+
+enpkg:BioAssayResults a rdfs:Class ;
+	rdfs:label "A bioassay result"   ;
+	rdfs:comment "An object to store bioactivity results" .
+
+enpkg:MS2Spectrum a rdfs:Class ;
+	rdfs:label "MS2 spectrum"   ;
+	rdfs:comment "A fragmentation mass spectrometry (or MS2) spectrum" .
+enpkg:LCMSFeature a rdfs:Class ;
+	rdfs:subClassOf enpkg:MS2Spectrum           ;
+	rdfs:label "LCMS individual MS2 spectrum"   ;
+	rdfs:comment "An LCMS feature from a processed LCMS analysis" .
+	
+enpkg:LCMSFeatureList a rdfs:Class ;
+	rdfs:label "Feature list"   ;
+	rdfs:comment "A list of LCMS features obtained from the processing of a given LCMS analysis" .
+
+enpkg:LCMSAnalysis a rdfs:Class ;
+	rdfs:label "LCMS analysis"   ;
+	rdfs:comment "An LCMS analysis in a given ionization mode (pos or neg)" .
+enpkg:LCMSAnalysisPos a rdfs:Class ;
+	rdfs:subClassOf enpkg:LCMSAnalysis           ;
+	rdfs:label "Pos LCMS analysis"   ;
+	rdfs:comment "An LCMS analysis in positive ionization mode (pos)" .
+
+enpkg:LCMSAnalysisNeg a rdfs:Class ;
+	rdfs:subClassOf enpkg:LCMSAnalysis           ;
+	rdfs:label "Neg LCMS analysis"   ;
+	rdfs:comment "An LCMS analysis in negative ionization mode (neg)" .
+
+# Annotation class
+enpkg:Annotation a rdfs:Class ;
+	rdfs:label "Spectrum annotation" ;
+	rdfs:comment "A spectral annotation" .
+enpkg:SiriusStructureAnnotation a rdfs:Class ;
+	rdfs:subClassOf enpkg:Annotation             ;
+	rdfs:label "SIRIUS structural annotation"   ;
+	rdfs:comment "A spectrum structural annotation by SIRIUS" .
+enpkg:SiriusCanopusAnnotation a rdfs:Class ;
+	rdfs:subClassOf enpkg:Annotation             ;
+	rdfs:label "CANOPUS chemical class annotation"   ;
+	rdfs:comment "A spectrum chemical class annotation by SIRIUS-CANOPUS" .
+enpkg:IsdbAnnotation a rdfs:Class ;
+	rdfs:subClassOf enpkg:Annotation           ;
+	rdfs:label "ISDB structural annotation"   ;
+	rdfs:comment "A spectrum structural annotation by comparison with an in-silico spectral DB, coupled to chemical and taxonomical reweighting" .
+enpkg:SpecLibAnnotation a rdfs:Class ;
+	rdfs:subClassOf enpkg:Annotation             ;
+        rdfs:label "Spectral Library Annotation" ;
+        rdfs:comment "Annotation of a spectrum based on a spectral library matching." .
+enpkg:TimaAnnotation a rdfs:Class ;
+	rdfs:subClassOf enpkg:Annotation             ;
+        rdfs:label "TIMA Annotation" ;
+        rdfs:comment "Annotation resulting from taxonomically informed reranking with TIMA." .
+
+
+# Features
+enpkg:SpectralPair a rdfs:Class ;
+	rdfs:label "pair of MS2Spectra"   ;
+	rdfs:comment "A pair of 2 MS2Spectra" .
+
+enpkg:LFpair a rdfs:Class ;
+	rdfs:subClassOf enpkg:SpectralPair        ;
+	rdfs:label "pair of LCMSFeature"   ;
+	rdfs:comment "A pair of 2 LCMSFeature" .
+
+# Chemical entity
+enpkg:ChemicalEntity a rdfs:Class ;
+	rdfs:label "chemical entity" ;
+	rdfs:label "A chemical entity (chemical structure or class)"  .
+	
+enpkg:InChIkey a rdfs:Class ;
+	rdfs:subClassOf enpkg:ChemicalEntity       ;
+	rdfs:label "InChIKey" ;
+	rdfs:comment "A chemical structure represented by its InChIKey" .
+
+enpkg:InChIkey2D a rdfs:Class ;
+	rdfs:subClassOf enpkg:ChemicalEntity       ;
+	rdfs:label "2D InChIKey" ;
+	rdfs:comment "The first 14 characters of an InChIKey, often returned by MS-based annotation tools" .
+
+# Chemical taxonomy
+enpkg:ChemicalTaxonomy a rdfs:Class ;
+	rdfs:label "chemical taxonomy" ;
+	rdfs:label "A chemical taxonmy (chemical class)"  .
+enpkg:NPCPathway a rdfs:Class ;
+	rdfs:subClassOf enpkg:ChemicalTaxonomy       ;
+	rdfs:label "NPCPathway" ;
+	rdfs:comment "A NPClassifier (NPC) chemical pathway" .
+enpkg:NPCSuperclass a rdfs:Class ;
+	rdfs:subClassOf enpkg:ChemicalTaxonomy       ;
+	rdfs:label "NPCSuperclass" ;
+	rdfs:comment "A NPClassifier (NPC) chemical superclass" .
+enpkg:NPCClass a rdfs:Class ;
+	rdfs:subClassOf enpkg:ChemicalTaxonomy       ;
+	rdfs:label "NPCClass" ;
+	rdfs:comment "A NPClassifier (NPC) chemical class" .
+
+
+enpkg:XRef a rdfs:Class ;
+	rdfs:label "Any cross-reference"   ;
+	rdfs:comment "Any cross-reference" .
+enpkg:WDTaxon a rdfs:Class ;
+	rdfs:subClassOf enpkg:XRef                            ;
+	rdfs:label "Cross-reference to a taxon in Wikidata"   ;
+	rdfs:comment "Cross-reference to a taxon in Wikidata" .
+enpkg:WDChemical a rdfs:Class ;
+	rdfs:subClassOf enpkg:XRef                                      ;
+	rdfs:label "Cross-reference to a chemical entity in Wikidata"   ;
+	rdfs:comment "Cross-reference to a chemical entity in Wikidata" .	
+
+enpkg:has_member a rdf:Property ;
+	rdfs:label "member of a specral pair"     ;
+	rdfs:comment "LCMSFeature" ;
+	rdfs:domain enpkg:SpectralPair   ;
+	rdfs:range  enpkg:LCMSFeature    ;
+	rdfs:range  enpkg:GNPSConsensusSpectrum    .
+enpkg:has_member_1 a rdf:Property ;
+	rdfs:subPropertyOf enpkg:has_member          ;
+	rdfs:label "member 1 of a spectral pair"     ;
+	rdfs:comment "The first member of a spectral pair" .
+enpkg:has_member_2 a rdf:Property ;
+	rdfs:subPropertyOf enpkg:has_member          ;
+	rdfs:label "member 2 of a spectral pair"     ;
+	rdfs:comment "The second member of a spectral pair" .
+
+enpkg:spec2vec a rdfs:Class ;
+	rdfs:label "A spec2vec-related object"   ;
+	rdfs:comment "A spec2vec-related object" .
+enpkg:Spec2VecDoc a rdfs:Class ;
+	rdfs:subClassOf enpkg:spec2vec           ;
+	rdfs:label "A Spec2VecDoc"   ;
+	rdfs:comment "An ensemble of Spec2VecPeak and Spec2VecLoss objects that characterizes an MS2Spectrum" .
+enpkg:Spec2VecPeak a rdfs:Class ;
+	rdfs:subClassOf enpkg:spec2vec           ;
+	rdfs:label "A Spec2VecPeak"   ;
+	rdfs:comment "A Spec2VecPeak that partly characterizes an MS2 spectrum" .
+enpkg:Spec2VecLoss a rdfs:Class ;
+	rdfs:subClassOf enpkg:spec2vec           ;
+	rdfs:label "A Spec2VecLoss"   ;
+	rdfs:comment "A Spec2VecLoss that partly characterizes an MS2Spectrum" .
+
+# enpkg:has_spectrum_annotation  a rdf:Property ;
+# 	rdfs:label "has spectrum annotation" ;
+# 	rdfs:domain enpkg:MS2Spectrum        .
+# enpkg:has_canopus_annotation a rdf:Property	;
+# 	rdfs:subPropertyOf enpkg:has_spectrum_annotation ;
+# 	rdfs:range enpkg:Annotation                      .
+# enpkg:has_isdb_annotation a rdf:Property ;
+# 	rdfs:subPropertyOf enpkg:has_spectrum_annotation ;
+# 	rdfs:label "has ISDB annotation"                 ;
+# 	rdfs:comment "bla"                               ;
+# 	rdfs:range  enpkg:IsdbAnnotation                 .
+# enpkg:has_consensus_spectrum a rdf:Property ;
+# 	rdfs:subPropertyOf enpkg:has_spectrum_annotation ;
+# 	rdfs:label "has consensus spectrum"              ;
+# 	rdfs:comment "bla"                               ;
+# 	rdfs:range  enpkg:GNPSConsensusSpectrum          .
+
+### SIRIUS
+enpkg:has_sirius_annotation a rdf:Property ;
+ 	rdfs:subPropertyOf enpkg:has_spectrum_annotation ;
+ 	rdfs:label "has SIRIUS annotation"               ;
+    rdfs:comment "A property indicating that a feature has a Sirius structure annotation." ;
+ 	rdfs:range enpkg:SiriusStructureAnnotation      .
+
+enpkg:has_InChIkey2D a rdf:Property ;
+    rdfs:comment "A property linking a Sirius annotation to its associated 2D InChI key." ;
+    rdfs:domain enpkg:SiriusStructureAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_ionization a rdf:Property ;
+    rdfs:comment "A property indicating the ionization mode of a Sirius molecular formula annotation." ;
+    rdfs:domain enpkg:SiriusStructureAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_sirius_adduct a rdf:Property ;
+    rdfs:comment "A property indicating the adduct information for a Sirius molecular formula annotation." ;
+    rdfs:domain enpkg:SiriusStructureAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_sirius_score a rdf:Property ;
+    rdfs:comment "A property indicating the score given by SIRIUS for a particular molecular formula." ;
+    rdfs:domain enpkg:SiriusStructureAnnotation ;
+    rdfs:range xsd:float .
+
+enpkg:has_zodiac_score a rdf:Property ;
+    rdfs:comment "A property indicating the zodiac score of the molecular formula annotated with SIRIUS." ;
+    rdfs:domain enpkg:SiriusStructureAnnotation ;
+    rdfs:range xsd:float .
+
+enpkg:has_cosmic_score a rdf:Property ;
+    rdfs:comment "A property indicating the cosmic confidence score for a SIRIUS structural annotation." ;
+    rdfs:domain enpkg:SiriusStructureAnnotation ;
+    rdfs:range xsd:float .
+
+enpkg:has_adducts a rdf:Property ;
+    rdfs:label "has adducts" ;
+    rdfs:comment "The number of adducts associated with a Sirius annotation." ;
+    rdfs:domain enpkg:SiriusStructureAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_csi_score a rdf:Property ;
+    rdfs:label "has CSI:FingerID score" ;
+    rdfs:comment "The score given by CSI:FingerID for a particular annotation." ;
+    rdfs:domain enpkg:SiriusStructureAnnotation ;
+    rdfs:range xsd:float .
+
+enpkg:has_dbflags a rdf:Property ;
+    rdfs:label "has database flags" ;
+    rdfs:comment "Database flags associated with a Sirius annotation." ;
+    rdfs:domain enpkg:SiriusStructureAnnotation ;
+    rdfs:range xsd:integer .
+
+enpkg:has_formulaRank a rdf:Property ;
+    rdfs:label "has formula rank" ;
+    rdfs:comment "The rank of the molecular formula in a Sirius annotation." ;
+    rdfs:domain enpkg:SiriusStructureAnnotation ;
+    rdfs:range xsd:integer .
+
+enpkg:has_ionmass a rdf:Property ;
+    rdfs:label "has ion mass" ;
+    rdfs:comment "The ion mass of the molecular formula in a Sirius annotation." ;
+    rdfs:domain enpkg:SiriusStructureAnnotation ;
+    rdfs:range xsd:float .
+
+enpkg:has_links a rdf:Property ;
+    rdfs:label "has links" ;
+    rdfs:comment "Links to external databases and resources related to a Sirius annotation." ;
+    rdfs:domain enpkg:SiriusStructureAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_logp a rdf:Property ;
+    rdfs:label "has logP" ;
+    rdfs:comment "The logP value of the compound in a Sirius annotation." ;
+    rdfs:domain enpkg:SiriusStructureAnnotation ;
+    rdfs:range xsd:float .
+
+enpkg:has_molecular_formula a rdf:Property ;
+    rdfs:label "has molecular formula" ;
+    rdfs:comment "The molecular formula of the compound in a Sirius annotation." ;
+    rdfs:domain enpkg:SiriusStructureAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_name a rdf:Property ;
+    rdfs:label "has name" ;
+    rdfs:comment "The name of the compound in a Sirius annotation." ;
+    rdfs:domain enpkg:SiriusStructureAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_predictedFPs a rdf:Property ;
+    rdfs:label "has predicted FPs" ;
+    rdfs:comment "The number of predicted functional groups (FPs) in a Sirius annotation." ;
+    rdfs:domain enpkg:SiriusStructureAnnotation ;
+    rdfs:range xsd:integer .
+
+enpkg:has_pubchemids a rdf:Property ;
+    rdfs:label "has PubChem IDs" ;
+    rdfs:comment "PubChem IDs associated with a Sirius annotation." ;
+    rdfs:domain enpkg:SiriusStructureAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_rank a rdf:Property ;
+    rdfs:label "has rank" ;
+    rdfs:comment "The rank of the Sirius annotation." ;
+    rdfs:domain enpkg:SiriusStructureAnnotation ;
+    rdfs:range xsd:integer .
+
+enpkg:has_rt_in_secs a rdf:Property ;
+    rdfs:label "has retention time in seconds" ;
+    rdfs:comment "The retention time in seconds for the feature associated with a Sirius annotation." ;
+    rdfs:domain enpkg:SiriusStructureAnnotation ;
+    rdfs:range xsd:float .
+
+enpkg:has_classyfire_chemontid a rdf:Property ;
+    rdfs:label "has ClassyFire ChemOnt ID" ;
+    rdfs:comment "The ClassyFire ChemOntology ID of the annotation." ;
+    rdfs:domain enpkg:TimaAnnotation ;
+    rdfs:range xsd:string .
+
+
+### CANOPUS
+enpkg:has_canopus_annotation a rdf:Property ;
+    rdfs:label "has Canopus annotation" ;
+    rdfs:comment "A property indicating that a feature has a Canopus annotation." ;
+    rdfs:range enpkg:SiriusCanopusAnnotation .
+
+# Properties specific to Canopus annotations
+enpkg:has_adduct a rdf:Property ;
+    rdfs:label "has adduct" ;
+    rdfs:comment "The adduct associated with a Canopus annotation." ;
+    rdfs:domain enpkg:SiriusCanopusAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_molecular_formula a rdf:Property ;
+    rdfs:label "has molecular formula" ;
+    rdfs:comment "The molecular formula associated with a Canopus annotation." ;
+    rdfs:domain enpkg:SiriusCanopusAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_precursor_formula a rdf:Property ;
+    rdfs:label "has precursor formula" ;
+    rdfs:comment "The precursor formula associated with a Canopus annotation." ;
+    rdfs:domain enpkg:SiriusCanopusAnnotation ;
+    rdfs:range xsd:string .
+
+### CLASSYFIRE
+
+# Properties for ClassyFire categories
+enpkg:has_classyfire_most_specific_class a rdf:Property ;
+    rdfs:label "has ClassyFire most specific class" ;
+    rdfs:comment "The most specific class of a compound as determined by ClassyFire." ;
+    rdfs:domain enpkg:SiriusCanopusAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_classyfire_class a rdf:Property ;
+    rdfs:label "has ClassyFire class" ;
+    rdfs:comment "The class of a compound as determined by ClassyFire." ;
+    rdfs:domain enpkg:SiriusCanopusAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_classyfire_subclass a rdf:Property ;
+    rdfs:label "has ClassyFire subclass" ;
+    rdfs:comment "The subclass of a compound as determined by ClassyFire." ;
+    rdfs:domain enpkg:SiriusCanopusAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_classyfire_superclass a rdf:Property ;
+    rdfs:label "has ClassyFire superclass" ;
+    rdfs:comment "The superclass of a compound as determined by ClassyFire." ;
+    rdfs:domain enpkg:SiriusCanopusAnnotation ;
+    rdfs:range xsd:string .
+
+
+enpkg:has_classyfire_level_5 a rdf:Property ;
+    rdfs:label "has ClassyFire level 5" ;
+    rdfs:comment "The level 5 chemical classification of a compound as determined by ClassyFire." ;
+    rdfs:domain enpkg:SiriusCanopusAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_classyfire_level_5_prob a rdf:Property ;
+    rdfs:label "has ClassyFire level 5 probability" ;
+    rdfs:comment "Probability associated with the ClassyFire level 5 classification." ;
+    rdfs:domain enpkg:SiriusCanopusAnnotation ;
+    rdfs:range xsd:float .
+
+# Properties for NPClassifier
+
+enpkg:has_npc_superclass a rdf:Property ;
+    rdfs:label "has NPClassifier superclass" ;
+    rdfs:comment "The NPClassifier superclass categorization of the compound." ;
+    rdfs:domain enpkg:TimaAnnotation , enpkg:SiriusCanopusAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_npc_superclass_prob a rdf:Property ;
+    rdfs:label "has Canopus NPC superclass probability" ;
+    rdfs:comment "Probability associated with the Canopus NPC superclass." ;
+    rdfs:domain enpkg:SiriusCanopusAnnotation ;
+    rdfs:range xsd:float .
+
+enpkg:has_npc_pathway a rdf:Property ;
+    rdfs:label "has NPClassifier superclass" ;
+    rdfs:comment "The NPClassifier pathway for the annotation." ;
+    rdfs:domain enpkg:TimaAnnotation , enpkg:SiriusCanopusAnnotation ;;
+    rdfs:range xsd:string .
+
+enpkg:has_npc_pathway_prob a rdf:Property ;
+    rdfs:label "has Canopus NPC pathway probability" ;
+    rdfs:comment "Probability associated with the Canopus NPC pathway." ;
+    rdfs:domain enpkg:SiriusCanopusAnnotation ;
+    rdfs:range xsd:float .
+
+enpkg:has_npc_class a rdf:Property ;
+    rdfs:label "has NPClassifier superclass" ;
+    rdfs:comment "The NPClassifier class for the annotation." ;
+    rdfs:domain enpkg:TimaAnnotation , enpkg:SiriusCanopusAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_npc_class_prob a rdf:Property ;
+    rdfs:label "has Canopus NPC class probability" ;
+    rdfs:comment "Probability associated with the Canopus NPC class." ;
+    rdfs:domain enpkg:SiriusCanopusAnnotation ;
+    rdfs:range xsd:float .
+
+### TIMA 
+
+enpkg:has_tima_annotation a rdf:Property ;
+    rdfs:label "has TIMA annotation" ;
+    rdfs:comment "A property indicating that a feature has a TIMA annotation." ;
+    rdfs:domain enpkg:Feature ;  # Assuming a Feature class exists
+    rdfs:range enpkg:TimaAnnotation .
+
+enpkg:has_InChIkey2D a rdf:Property ;
+    rdfs:label "has InChIkey2D" ;
+    rdfs:comment "The InChIkey2D associated with an annotation." ;
+    rdfs:domain enpkg:TimaAnnotation ;
+    rdfs:range enpkg:InChIkey2D .
+
+enpkg:has_SMILES a rdf:Property ;
+    rdfs:label "has SMILES" ;
+    rdfs:comment "The SMILES structure representation of the compound." ;
+    rdfs:domain enpkg:TimaAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_structure_name a rdf:Property ;
+    rdfs:label "has structure name" ;
+    rdfs:comment "The name of the structure." ;
+    rdfs:domain enpkg:TimaAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_molecular_formula a rdf:Property ;
+    rdfs:label "has molecular formula" ;
+    rdfs:comment "The molecular formula of the compound." ;
+    rdfs:domain enpkg:TimaAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_reference a rdf:Property ;
+    rdfs:label "has reference" ;
+    rdfs:comment "A reference associated with the compound or annotation." ;
+    rdfs:domain enpkg:TimaAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_best_candidate_organism a rdf:Property ;
+    rdfs:label "has best candidate organism" ;
+    rdfs:comment "The top candidate organism for the compound." ;
+    rdfs:domain enpkg:TimaAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_spectral_score a rdf:Property ;
+    rdfs:label "has spectral score" ;
+    rdfs:comment "The score based on spectral data." ;
+    rdfs:domain enpkg:TimaAnnotation ;
+    rdfs:range xsd:float .
+
+enpkg:has_taxo_score a rdf:Property ;
+    rdfs:label "has taxonomical score" ;
+    rdfs:comment "The score based on taxonomical data." ;
+    rdfs:domain enpkg:TimaAnnotation ;
+    rdfs:range xsd:float .
+
+enpkg:has_consistency_score a rdf:Property ;
+    rdfs:label "has consistency score" ;
+    rdfs:comment "The score based on consistency checks." ;
+    rdfs:domain enpkg:TimaAnnotation ;
+    rdfs:range xsd:float .
+
+enpkg:has_final_score a rdf:Property ;
+    rdfs:label "has final score" ;
+    rdfs:comment "The final computed score for the compound." ;
+    rdfs:domain enpkg:TimaAnnotation ;
+    rdfs:range xsd:float .
+
+enpkg:has_rank_final a rdf:Property ;
+    rdfs:label "has final rank" ;
+    rdfs:comment "The final rank assigned to the compound." ;
+    rdfs:domain enpkg:TimaAnnotation ;
+    rdfs:range xsd:integer .
+
+enpkg:has_rank_initial a rdf:Property ;
+    rdfs:label "has initial rank" ;
+    rdfs:comment "The initial rank assigned to the compound." ;
+    rdfs:domain enpkg:TimaAnnotation ;
+    rdfs:range xsd:integer .
+
+
+### Feature-based molecular networking (FBMN)
+enpkg:FBMNComponentIndex a rdfs:Class ;
+    rdfs:label "FBMN Component Index" ;
+    rdfs:comment "Represents an FBMN component index." .
+
+enpkg:Related_SpecPair a rdfs:Class ;
+    rdfs:label "Spectrally similar LC-MS Feature Pair" ;
+    rdfs:comment "A pair of LC-MS features that are related based on molecular networking." .
+
+enpkg:SingleNode a rdfs:Class ;
+    rdfs:label "Single Node" ;
+    rdfs:comment "Represents an LC-MS feature that is not part of a network, identified by a specific component index." .
+
+enpkg:InNetwork a rdfs:Class ;
+    rdfs:label "In Network Node" ;
+    rdfs:comment "Represents an LC-MS feature that is part of a molecular network, identified by a specific component index." .
+
+enpkg:has_FBMN_ComponentIndex a rdf:Property ;
+    rdfs:label "has FBMN component index" ;
+    rdfs:comment "A property linking a LC-MS feature to its associated FBMN component index." ;
+    rdfs:domain enpkg:LCMSFeature ;
+    rdfs:range enpkg:FBMNComponentIndex .
+
+enpkg:has_cosine a rdf:Property ;
+    rdfs:label "has cosine similarity" ;
+    rdfs:comment "The cosine similarity between two LC-MS features in a molecular network." ;
+    rdfs:domain enpkg:Related_SpecPair ;
+    rdfs:range xsd:float .
+
+enpkg:has_mass_difference a rdf:Property ;
+    rdfs:label "has mass difference" ;
+    rdfs:comment "The mass difference between two LC-MS features in a molecular network." ;
+    rdfs:domain enpkg:Related_SpecPair ;
+    rdfs:range xsd:float .
+
+enpkg:has_member_1 a rdf:Property ;
+    rdfs:label "has first member" ;
+    rdfs:comment "The first member of a LC-MS feature pair." ;
+    rdfs:domain enpkg:Related_SpecPair ;
+    rdfs:range enpkg:LCMSFeature .
+
+enpkg:has_member_2 a rdf:Property ;
+    rdfs:label "has second member" ;
+    rdfs:comment "The second member of a LC-MS feature pair." ;
+    rdfs:domain enpkg:Related_SpecPair ;
+    rdfs:range enpkg:LCMSFeature .
+
+### Spectral Library Annotations
+
+enpkg:has_speclib_annotation a rdf:Property ;
+    rdfs:label "has spectral library annotation" ;
+    rdfs:domain enpkg:LCMSFeature ;
+    rdfs:range enpkg:SpecLibAnnotation .
+    rdfs:range xsd:string .
+
+enpkg:has_InChIkey a rdf:Property ;
+    rdfs:label "has InChIkey" ;
+    rdfs:domain enpkg:SpecLibAnnotation .
+    rdfs:range xsd:string .
+
+enpkg:has_inchi a rdf:Property ;
+    rdfs:label "has InChI" ;
+    rdfs:domain enpkg:SpecLibAnnotation ;
+    rdfs:range xsd:string .
+
+enpkg:has_spectral_library_id a rdf:Property ;
+    rdfs:label "has spectral library ID" ;
+    rdfs:domain enpkg:SpecLibAnnotation .
+    rdfs:range xsd:string .
+
+enpkg:has_spectral_library a rdf:Property ;
+    rdfs:label "has spectral library source" ;
+    rdfs:domain enpkg:SpecLibAnnotation .
+    rdfs:range xsd:string .
+
+enpkg:has_msms_score a rdf:Property ;
+    rdfs:label "has MS/MS modified-cosine similarity score" ;
+    rdfs:domain enpkg:SpecLibAnnotation ;
+    rdfs:range xsd:float .
+
+enpkg:has_matched_peaks a rdf:Property ;
+    rdfs:label "has this number of matched fragment ions" ;
+    rdfs:domain enpkg:SpecLibAnnotation ;
+    rdfs:range xsd:int .
