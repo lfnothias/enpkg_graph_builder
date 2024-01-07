@@ -219,14 +219,14 @@ for directory in tqdm(samples_dir):
                     g.add((canopus_annotation_id, ns_kg.has_classyfire_most_specific_class_prob, rdflib.term.Literal(float(row['ClassyFire#most specific class Probability']), datatype=XSD.float)))
 
                 if pd.notna(row['ClassyFire#level 5']) and pd.notna(row['ClassyFire#level 5 Probability']) and row['ClassyFire#level 5 Probability'] != 'Unknown':
-                    level_5_uri = rdflib.term.URIRef(kg_uri + row['ClassyFire#level 5'].replace(" ", "_").replace("#", "_").replace(",", ""))
+                    level_5_uri = rdflib.term.URIRef(kg_uri + encode_problematic_uri_segment(row['ClassyFire#level 5'].replace(" ", "_").replace("#", "_").replace(",", "")))
                     level_5_prob = rdflib.term.Literal(float(row['ClassyFire#level 5 Probability']), datatype=XSD.float)
 
                     g.add((canopus_annotation_id, ns_kg.has_classyfire_level_5, level_5_uri))
                     g.add((canopus_annotation_id, ns_kg.has_classyfire_level_5_prob, level_5_prob))
 
                 if pd.notna(row['ClassyFire#subclass']) and pd.notna(row['ClassyFire#subclass Probability']) and row['ClassyFire#subclass Probability'] != 'Unknown':
-                    g.add((canopus_annotation_id, ns_kg.has_classyfire_subclass, rdflib.term.URIRef(kg_uri + row['ClassyFire#subclass'].replace(" ", "_").replace("#", "_").replace(",", ""))))
+                    g.add((canopus_annotation_id, ns_kg.has_classyfire_subclass, rdflib.term.URIRef(kg_uri + encode_problematic_uri_segment(row['ClassyFire#subclass'].replace(" ", "_").replace("#", "_").replace(",", "")))))
                     g.add((canopus_annotation_id, ns_kg.has_classyfire_subclass_prob, rdflib.term.Literal(float(row['ClassyFire#subclass Probability']), datatype=XSD.float)))
 
                 if pd.notna(row['ClassyFire#class']) and pd.notna(row['ClassyFire#class Probability']) and row['ClassyFire#class Probability'] != 'Unknown':
@@ -234,7 +234,7 @@ for directory in tqdm(samples_dir):
                     g.add((canopus_annotation_id, ns_kg.has_classyfire_class_prob, rdflib.term.Literal(float(row['ClassyFire#class Probability']), datatype=XSD.float)))
 
                 if pd.notna(row['ClassyFire#superclass']) and pd.notna(row['ClassyFire#superclass probability']) and row['ClassyFire#superclass probability'] != 'Unknown':
-                    g.add((canopus_annotation_id, ns_kg.has_classyfire_superclass, rdflib.term.URIRef(kg_uri + row['ClassyFire#superclass'].replace(" ", "_").replace("#", "_").replace(",", ""))))
+                    g.add((canopus_annotation_id, ns_kg.has_classyfire_superclass, rdflib.term.URIRef(kg_uri + encode_problematic_uri_segment(row['ClassyFire#superclass'].replace(" ", "_").replace("#", "_").replace(",", "")))))
                     g.add((canopus_annotation_id, ns_kg.has_classyfire_superclass_prob, rdflib.term.Literal(float(row['ClassyFire#superclass probability']), datatype=XSD.float)))
 
         except FileNotFoundError:
