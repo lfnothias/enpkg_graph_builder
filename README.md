@@ -3,7 +3,8 @@ Build the Experimental Natural Products Knowledge Graph
 
 ⚙️ Workflow part of [enpkg_workflow](https://github.com/enpkg/enpkg_workflow).
 
-The aim of this repository is to format as RDF the data produced previously. 
+The aim of this repository is to format as RDF the data produced with GNPS/SIRIUS/tima.
+
 ## 0. Clone repository and install environment
 
 1. Clone this repository.
@@ -16,76 +17,22 @@ conda env create -f environment.yml
 conda activate graph_builder
 ```
 
-## 1. Steps that are sample's specific
-
-### 1.1 Format samples' metadata
+## Running it
 
 ```console
-python src/individual_processing/01_rdf_sample_metadata.py -p path/to/your/data/directory/
+python src/rdf_builder.py --folder input --ion neg --ion_sirius auto --ion --ion
 ```
 
-### 1.2 Format feature's
-:warning: Part of this script needs to be adataped to you data
-
-```console
-python src/individual_processing/02_rdf_features.py -p path/to/your/data/directory/ -ion {pos} or {neg}
+### Parameters
 ```
-
-### 1.3 Format Sirius/CSI:FingerID annotations
-
-```console
-python src/individual_processing/03_rdf_csi_annotations.py -p path/to/your/data/directory/ -ion {pos} or {neg} or {auto}
+'--folder', required=True, help='The path to the directory where samples folders to process are located'
 ```
-
-### 1.4 Format Canopus annotations
-
-```console
-python src/individual_processing/04_rdf_canopus.py -p path/to/your/data/directory/ -ion {pos} or {neg}
 ```
-
-
-### 1.5a Format ISDB annotations
-
-```console
-python src/individual_processing/05_rdf_isdb_annotations.py -p path/to/your/data/directory/ -ion {pos} or {neg}
+'-ion', '--ionization_mode', required=True, choices=['pos', 'neg'], help='The ionization mode to perform spectral library matching'
 ```
-
-### 1.5b Format timaR annotations
-
-```console
-python src/individual_processing/05_rdf_tima-r_annotations.py -p path/to/your/data/directory/ -ion {pos} or {neg}
 ```
-Requirements, the timaR results must be present in a folder `tima-r` and must have a `metadata.tsv` in the root folder.
-
-### 1.6 Format samples' FBMN
-
-```console
-python src/individual_processing/06_rdf_individual_mn.py -p path/to/your/data/directory/ -ion {pos} or {neg}
+'-c', '--cpus', Number of cpu to use. Default is 80% of available CPUs.'
 ```
-
-
-## 2. Steps that are dataset specific/optional
-
-### 2.1. Format GNPS meta-MN
-
-```console
-python src/07_rdf_meta_mn.py -p path/to/your/data/directory/  -ion {pos} or {neg} -id {gnps_job_id} -m {The metadata file corresonding to the aggregated .mgf uploaded on GNPS}
 ```
-
-### 2.2. Format structures' metadata
-
-```console
-python src/08_rdf_structures_metadata.py -p path/to/your/data/directory/ -db {The path to the structures metadata SQL DB}
+'-r', '--recompute', Recompute even if the files are already present
 ```
-
-### 2.3. Format ChEMBL structures' metadata
-
-```console
-python src/08_rdf_structures_metadata.py -p path/to/your/data/directory/ -chemdb {The path to the structures metadata SQL DB} -biodb {The path to the samples ChEMBL metadata FOLDER (will integrate all ChEMBL files)}
-```
-## 3. Compress to gzip
-Compress to gzip the produced .ttl files whose size exceed 200Mb to allow for GraphDB import.
-```console
-python src/10_gzip_rdf.py -p path/to/your/data/directory/
-```
-
