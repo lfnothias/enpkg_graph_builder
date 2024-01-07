@@ -18,8 +18,8 @@ def run_script(base_path, script_path, params):
 
 def main():
     parser = argparse.ArgumentParser(description='Run scripts in parallel.')
-    parser.add_argument('--folder', required=True, help='Folder path argument')
-    parser.add_argument('--ion', required=True, help='Ionization mode argument')
+    parser.add_argument('-p', '--sample_dir_path', required=True, help='Folder path argument')
+    parser.add_argument('-ion', '--ionization_mode', required=True, help='Ionization mode argument')
     parser.add_argument('--ion_sirius', default='auto', help='Ionization mode for Sirius annotations argument')
     parser.add_argument('-c', '--cpus', type=int, default=None,
                     help='Number of CPUs to use for processing. Default is 50% of available CPUs.')
@@ -41,8 +41,8 @@ def main():
     base_path = os.path.join(script_dir, "individual_processing/")
 
     # Define parameters
-    params_wrapper_folder = "-p " + args.folder
-    params_wrapper_ion = "-ion " + args.ion
+    params_wrapper_folder = "-p " + args.sample_dir_path
+    params_wrapper_ion = "-ion " + args.ionization_mode
     params_wrapper_ion_sirius = "-ion " + args.ion_sirius if args.ion_sirius else params_wrapper_ion
 
     # Paths to your scripts
