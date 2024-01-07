@@ -40,8 +40,10 @@ for directory in tqdm(samples_dir):
     nm = g.namespace_manager
     nm.bind('wd', WD)
     nm.bind(prefix, ns_kg)
+    
+    #metadata_path = os.path.join(path, directory, directory + '_metadata.tsv')
+    metadata_path = os.path.join(path, directory, 'metadata.tsv')
 
-    metadata_path = os.path.join(path, directory, directory + '_metadata.tsv')
     try:
         metadata = pd.read_csv(metadata_path, sep='\t')
     except FileNotFoundError:
@@ -50,7 +52,6 @@ for directory in tqdm(samples_dir):
         continue
         
     sample = rdflib.term.URIRef(enpkg_uri + metadata.sample_id[0])
-    
     if metadata.sample_type[0] == 'sample':
         material_id = rdflib.term.URIRef(enpkg_uri + metadata.sample_substance_name[0])
         g.add((material_id, RDF.type, ns_kg.RawMaterial))
@@ -101,7 +102,7 @@ for directory in tqdm(samples_dir):
         except FileNotFoundError:
             g.add((material_id, ns_kg.has_unresolved_taxon, rdflib.term.URIRef(enpkg_uri + 'unresolved_taxon')))
               
-    elif metadata.sample_type[0] == 'blank':
+    elif metadata.sample_type[0].lower() == 'blank':
         g.add((sample, RDF.type, ns_kg.LabBlank))
         g.add((sample, RDFS.label, rdflib.term.Literal(f"Blank {metadata.sample_id[0]}")))
 
@@ -125,7 +126,7 @@ for directory in tqdm(samples_dir):
                 g.add((rdflib.term.URIRef(enpkg_uri + metadata['sample_filename_neg'][0]), ns_kg.has_massive_license, rdflib.URIRef("https://creativecommons.org/publicdomain/zero/1.0/")))
 
 
-    elif metadata.sample_type[0] == 'qc':
+    elif metadata.sample_type[0].lower() == 'qc':
         g.add((sample, RDF.type, ns_kg.LabQc))
         g.add((sample, RDFS.label, rdflib.term.Literal(f"QC {metadata.sample_id[0]}")))
         if set(['sample_filename_pos', 'massive_id']).issubset(metadata.columns):
@@ -150,5 +151,6 @@ for directory in tqdm(samples_dir):
     pathout = os.path.join(sample_dir_path, directory, "rdf/")
     os.makedirs(pathout, exist_ok=True)
     pathout = os.path.normpath(os.path.join(pathout, 'metadata_enpkg.ttl'))
+    print(pathout)
     g.serialize(destination=pathout, format="ttl", encoding="utf-8")
     print(f'Results are in : {pathout}')
