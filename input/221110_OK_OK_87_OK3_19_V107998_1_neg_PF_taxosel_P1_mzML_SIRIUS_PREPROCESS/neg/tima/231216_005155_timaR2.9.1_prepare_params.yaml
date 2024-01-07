@@ -1,0 +1,14 @@
+files:
+  features:
+    raw: data/source/221110_OK_OK_87_OK3_19_V107998_1_neg_PF_taxosel_P1_mzML_SIRIUS_PREPROCESS-feature_table.csv
+  metadata:
+    raw: data/source/metadata.tsv
+  pattern: example
+  spectral:
+    raw: data/source/221110_OK_OK_87_OK3_19_V107998_1_neg_PF_taxosel_P1_mzML_SIRIUS_PREPROCESS-FBMN.mgf
+ms:
+  polarity: neg
+options:
+  summarise: no
+organisms:
+  taxon: Schumannianthus dichotomus
