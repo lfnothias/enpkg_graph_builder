@@ -10,6 +10,8 @@ from tqdm import tqdm
 from pathlib import Path
 import shutil
 import numpy as np
+import warnings
+
 p = Path(__file__).parents[2]
 os.chdir(p)
 
@@ -42,7 +44,8 @@ with open(os.path.normpath('data/adducts_formatter.json')) as json_file:
     adducts_dic = json.load(json_file)
 
 path = os.path.normpath(sample_dir_path)
-samples_dir = [directory for directory in os.listdir(path) if directory != '.DS_Store']
+samples_dir = [directory for directory in os.listdir(path)
+               if os.path.isdir(os.path.join(path, directory))]
 
 df_list = []
 
@@ -50,15 +53,16 @@ samples_dir = [os.path.join(sample_dir)
                for sample_dir in os.listdir(path)
                if os.path.isdir(os.path.join(path, sample_dir))]
 
-def find_tima_r_files(root_folder):
+def find_tima_r_files(root_folder, current_directory, ionization_mode):
     root_path = Path(root_folder)
-    pattern = 'tima/data/processed/*tima_annotations.tsv'
+    current_dir_path = root_path / current_directory
+    pattern = f'{ionization_mode}/tima/data/processed/*tima_annotations.tsv'
 
-    tima_r_paths = [str(file_path) for file_path in root_path.rglob(pattern)]
+    tima_r_paths = [str(file_path) for file_path in current_dir_path.rglob(pattern)]
 
     if not tima_r_paths:
-        raise FileNotFoundError("No '*tima_annotations.tsv' files were found in 'tima' subfolders.")
-
+        warnings.warn(f"No '*tima_annotations.tsv' files were found in '{current_directory}/{ionization_mode}/tima/data/processed/' subfolders.")
+        
     return tima_r_paths
 
 for directory in tqdm(samples_dir):
@@ -74,7 +78,13 @@ for directory in tqdm(samples_dir):
         nm.bind(prefix, ns_kg)
 
         # Example usage: This will return a list of all 'tima-r_annotations.tsv' file paths in the sub-folders of '../tima-r_RESULTS'.
-        tima_r_file_paths = find_tima_r_files(sample_dir_path)
+        tima_r_file_paths = find_tima_r_files(sample_dir_path, directory, ionization_mode)
+
+        # Check if the list of file paths is empty
+        if not tima_r_file_paths:
+            print(f"No TIMA annotation files found for {directory} in {ionization_mode} mode.")
+            # Optionally, continue to the next directory or perform other actions
+            continue  # Skip the current iteration if no files are found
 
         metadata_path = os.path.join(sample_dir_path, directory, 'metadata.tsv')
         
