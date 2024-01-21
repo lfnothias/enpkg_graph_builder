@@ -59,12 +59,12 @@ for directory in tqdm(samples_dir):
         nm = g.namespace_manager
         nm.bind(prefix, ns_kg)
 
-        sample = rdflib.term.URIRef(kg_uri + metadata.sample_id[0])
+        sample = rdflib.term.URIRef(kg_uri + str(metadata.sample_id[0]))
         area_col = [col for col in quant_table.columns if col.endswith(' Peak area')][0]
         max_area = quant_table[area_col].max()
             
         # Add feature list object to samples
-        feature_list = rdflib.term.URIRef(kg_uri + metadata.sample_id[0] + "_lcms_feature_list_" + ionization_mode)
+        feature_list = rdflib.term.URIRef(kg_uri + str(metadata.sample_id[0]) + "_lcms_feature_list_" + ionization_mode)
 
         if ionization_mode == 'pos':
             lc_ms = rdflib.term.URIRef(kg_uri + metadata['sample_filename_pos'][0])
@@ -75,10 +75,10 @@ for directory in tqdm(samples_dir):
 
         g.add((feature_list, RDF.type, ns_kg.LCMSFeatureList))
         g.add((feature_list, ns_kg.has_ionization, rdflib.term.Literal(ionization_mode)))
-        g.add((feature_list, RDFS.comment, rdflib.term.Literal(f"LCMS feature list in {ionization_mode} ionization mode of {metadata.sample_id[0]}")))
+        g.add((feature_list, RDFS.comment, rdflib.term.Literal(f"LCMS feature list in {ionization_mode} ionization mode of {str(metadata.sample_id[0])}")))
         # Add feature and their metadat to feature list
         for _, row in quant_table.iterrows():
-            usi = 'mzspec:' + metadata['massive_id'][0] + ':' + metadata.sample_id[0] + '_features_ms2_'+ ionization_mode+ '.mgf:scan:' + str(int(row['row ID']))
+            usi = 'mzspec:' + metadata['massive_id'][0] + ':' + str(metadata.sample_id[0]) + '_features_ms2_'+ ionization_mode+ '.mgf:scan:' + str(int(row['row ID']))
             feature_id = rdflib.term.URIRef(kg_uri + 'lcms_feature_' + usi)
             g.add((feature_list, ns_kg.has_lcms_feature, feature_id))
             g.add((feature_id, RDF.type, ns_kg.LCMSFeature))
