@@ -34,11 +34,12 @@ parser.add_argument('-top', '--top_hits', required=False, type=int, default=3,
                     help='The top spectral matches to considered. Redundant structures are filtered out before.')
 
 args = parser.parse_args()
-sample_dir_path = os.path.normpath(args.sample_dir_path)
-
 ionization_mode = args.ionization_mode
 top_hits = args.top_hits
-sample_dir = [directory for directory in os.listdir(sample_dir_path) if directory != '.DS_Store']
+
+sample_dir_path = os.path.normpath(args.sample_dir_path)
+sample_dir = [directory for directory in os.listdir(sample_dir_path) 
+              if os.path.isdir(os.path.join(sample_dir_path, directory))]
 
 df_list = []
 
