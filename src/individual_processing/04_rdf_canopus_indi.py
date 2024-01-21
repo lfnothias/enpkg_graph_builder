@@ -35,14 +35,12 @@ parser.add_argument('-ion', '--ionization_mode', required=True,
 args = parser.parse_args()
 sample_dir_path = os.path.normpath(args.sample_dir_path)
 ionization_mode = args.ionization_mode
-print(sample_dir_path)
 
 
 path = os.path.normpath(sample_dir_path)
 samples_dir = [directory for directory in os.listdir(path) if not directory.startswith('.DS_Store')]
 df_list = []
 
-print(samples_dir)
 
 for directory in tqdm(samples_dir):
 
@@ -59,7 +57,7 @@ for directory in tqdm(samples_dir):
     nm.bind(prefix, ns_kg)
 
     dir_path = os.path.join(path, directory)
-    
+
     if not os.path.isdir(dir_path):
         continue
     
@@ -75,7 +73,6 @@ for directory in tqdm(samples_dir):
     else:
         csi_path = os.path.join(path, directory, 'compound_identifications.tsv')
         csi_annotations = pd.read_csv(csi_path, sep='\t')
-
         adduct_counts = csi_annotations['adduct'].value_counts()
         most_frequent_adduct = adduct_counts.idxmax()
 
@@ -87,24 +84,16 @@ for directory in tqdm(samples_dir):
         else:
             raise ValueError('Cannot deduce polarity from the most frequent adduct.')
 
-    target_dir = os.path.join(path, directory, ionization_mode)
-    if not os.path.exists(target_dir):
-        os.makedirs(target_dir)
+    target_dir = os.path.join(path, directory, 'rdf')
 
-    dir_path = os.path.join(path, directory)
-    for entry in os.scandir(dir_path):
-        if entry.is_file() and entry.name != 'metadata.tsv':
-            shutil.move(entry.path, os.path.join(target_dir, entry.name))
+    dir_path = os.path.join(path, directory, ionization_mode)
 
-    print(dir_path)
 
     g = Graph()
     nm = g.namespace_manager
 
     sirius_param_path = os.path.join(path, directory, ionization_mode, 'params.yml')
-    print(sirius_param_path)
     metadata_path = os.path.join(path, directory, 'metadata.tsv')
-    print(metadata_path)
     
     try:
         try:
@@ -115,7 +104,7 @@ for directory in tqdm(samples_dir):
                 pass
         except FileNotFoundError:
             sirius_version = 5
-            print(f"FileNotFoundError: The sirius_param_path file '{sirius_param_path}' was not found. Assuming the processing was external and with SIRIUS v.5")
+            #print(f"FileNotFoundError: The sirius_param_path file '{sirius_param_path}' was not found. Assuming the processing was external and with SIRIUS v.5 - It is important to keep a record of parameters")
     except NotADirectoryError:
         print(f"NotADirectoryError: Unable to read sirius_param_path at '{sirius_param_path}', it is not a valid directory.")
         continue
@@ -140,7 +129,7 @@ for directory in tqdm(samples_dir):
     if sirius_version == 4:
         # Canopus NPC results integration for sirius 4
         try:
-            canopus_npc_path = os.path.join(path, directory, ionization_mode, 'npc_summary.csv')
+            canopus_npc_path = os.path.join(path, directory, ionization_mode, 'canopus_formula_summary_adducts.tsv')
             canopus_annotations = pd.read_csv(canopus_npc_path)
             canopus_annotations.fillna('Unknown', inplace=True)
             for _, row in canopus_annotations.iterrows():        
@@ -181,7 +170,7 @@ for directory in tqdm(samples_dir):
     elif sirius_version == 5:
         # Canopus NPC results integration for sirius 5
         try:
-            canopus_npc_path = os.path.join(path, directory, ionization_mode, 'canopus_compound_summary.tsv')
+            canopus_npc_path = os.path.join(path, directory, ionization_mode, 'canopus_formula_summary_adducts.tsv')
             canopus_annotations = pd.read_csv(canopus_npc_path, sep='\t')
             canopus_annotations.fillna('Unknown', inplace=True)
             for _, row in canopus_annotations.iterrows():
@@ -224,7 +213,7 @@ for directory in tqdm(samples_dir):
     else:
         print('Else')
 
-    pathout = os.path.join(sample_dir_path, directory, "rdf/")
+    pathout = os.path.join(sample_dir_path, directory, "rdf")
     os.makedirs(pathout, exist_ok=True)
     pathout = os.path.normpath(os.path.join(pathout, f'canopus_{ionization_mode}.ttl'))
     g.serialize(destination=pathout, format="ttl", encoding="utf-8")
