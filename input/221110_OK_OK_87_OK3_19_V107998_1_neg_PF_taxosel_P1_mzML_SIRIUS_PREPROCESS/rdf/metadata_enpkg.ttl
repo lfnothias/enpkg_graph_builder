@@ -2,17 +2,18 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-enpkg:221110_OK_OK_87_OK3_19_V107998_1_neg_PF_taxosel_P1_mzML a enpkg:LCMSAnalysisNeg,
-        enpkg:RawMaterial ;
-    foaf:depiction <https://gnps-lcms.ucsd.edu/mspreview?usi=mzspec:MSV000091875:221110_OK_OK_87_OK3_19_V107998_1_neg_PF_taxosel_P1_mzML> ;
-    enpkg:has_gnpslcms_link <https://gnps-lcms.ucsd.edu/?usi=mzspec:MSV000091875:221110_OK_OK_87_OK3_19_V107998_1_neg_PF_taxosel_P1_mzML> ;
-    enpkg:has_lab_process enpkg:221110_OK_OK_87_OK3_19_V107998_1_neg_PF_taxosel_P1_mzML_SIRIUS_PREPROCESS ;
-    enpkg:has_massive_doi <https://massive.ucsd.edu/ProteoSAFe/dataset.jsp?accession=MSV000091875> ;
-    enpkg:has_massive_license <https://creativecommons.org/publicdomain/zero/1.0/> ;
+enpkg:V107998 a enpkg:RawMaterial ;
+    enpkg:has_lab_process enpkg:OK3_19_V107998 ;
     enpkg:has_unresolved_taxon enpkg:unresolved_taxon ;
     enpkg:submitted_taxon "Schumannianthus dichotomus" .
 
-enpkg:221110_OK_OK_87_OK3_19_V107998_1_neg_PF_taxosel_P1_mzML_SIRIUS_PREPROCESS a enpkg:LabExtract ;
-    rdfs:label "Sample 221110_OK_OK_87_OK3_19_V107998_1_neg_PF_taxosel_P1_mzML_SIRIUS_PREPROCESS" ;
+enpkg:221110_OK_OK_87_OK3_19_V107998_1_neg_PF_taxosel_P1_mzML a enpkg:LCMSAnalysisNeg ;
+    foaf:depiction <https://gnps-lcms.ucsd.edu/mspreview?usi=mzspec:MSV000091875:221110_OK_OK_87_OK3_19_V107998_1_neg_PF_taxosel_P1_mzML> ;
+    enpkg:has_gnpslcms_link <https://gnps-lcms.ucsd.edu/?usi=mzspec:MSV000091875:221110_OK_OK_87_OK3_19_V107998_1_neg_PF_taxosel_P1_mzML> ;
+    enpkg:has_massive_doi <https://massive.ucsd.edu/ProteoSAFe/dataset.jsp?accession=MSV000091875> ;
+    enpkg:has_massive_license <https://creativecommons.org/publicdomain/zero/1.0/> .
+
+enpkg:OK3_19_V107998 a enpkg:LabExtract ;
+    rdfs:label "Sample OK3_19_V107998" ;
     enpkg:has_LCMS enpkg:221110_OK_OK_87_OK3_19_V107998_1_neg_PF_taxosel_P1_mzML .
 
